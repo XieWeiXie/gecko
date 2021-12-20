@@ -38,10 +38,10 @@ var (
 
 var (
 	startTime, _ = time.Parse("2006-01-02 15:04:05", "2019-01-01 00:00:00")
-	startUnix    = strconv.FormatInt(startTime.Unix(),10)
+	startUnix    = strconv.FormatInt(startTime.Unix(), 10)
 	endTime, _   = time.Parse("2006-01-02 15:04:05", "2021-12-31 23:59:59")
-	endUnix      = strconv.FormatInt(endTime.Unix(),10)
-	year = time.Date(2019,1,1,0,0,0,0,time.Local)
+	endUnix      = strconv.FormatInt(endTime.Unix(), 10)
+	year         = time.Date(2019, 1, 1, 0, 0, 0, 0, time.Local)
 )
 
 type Cryptocurrency struct {
@@ -61,10 +61,10 @@ type Cryptocurrency struct {
 
 	ChangePrice float64 `json:"change_price"` // (ath - atl) / atl * 100
 
-	ATLMarketValue float32 `json:"atl_market_value"`
-	ATLMarketDate string `json:"atl_market_date"`
-	ATHMarketValue float32 `json:"ath_market_value"`
-	ATHMarketDate string `json:"ath_market_date"`
+	ATLMarketValue  float32 `json:"atl_market_value"`
+	ATLMarketDate   string  `json:"atl_market_date"`
+	ATHMarketValue  float32 `json:"ath_market_value"`
+	ATHMarketDate   string  `json:"ath_market_date"`
 	ChangeMarketCap float32 `json:"change_market_cap"` // (ath_market_value - atl_market_value)/atl
 
 	GenesisDate string `json:"genesis_date"`
@@ -103,36 +103,36 @@ type Compare struct {
 }
 
 type HL struct {
-	Min float32
-	Max float32
+	Min     float32
+	Max     float32
 	MinDate string
 	MaxDate string
 }
 
-func (c Compare) MinMax() HL{
+func (c Compare) MinMax() HL {
 	var list = make([]geckoTypes.ChartItem, 0)
 	for _, i := range c.List {
-		if i[1] !=0 {
+		if i[1] != 0 {
 			list = append(list, i)
 		}
 	}
 	var (
-		min float32 = 0
-		max float32 = 0
+		min     float32 = 0
+		max     float32 = 0
 		minDate string
 		maxDate string
 	)
 	min, max = list[0][1], list[0][1]
-	minDate = time.Unix(int64(list[0][0]/1e3),0).Format("2006-01-02")
+	minDate = time.Unix(int64(list[0][0]/1e3), 0).Format("2006-01-02")
 	maxDate = minDate
 	for _, i := range list {
 		if i[1] < min {
 			min = i[1]
-			minDate = time.Unix(int64(i[0]/1e3),0).Format("2006-01-02")
+			minDate = time.Unix(int64(i[0]/1e3), 0).Format("2006-01-02")
 		}
 		if i[1] > max {
 			max = i[1]
-			maxDate = time.Unix(int64(i[0]/1e3),0).Format("2006-01-02")
+			maxDate = time.Unix(int64(i[0]/1e3), 0).Format("2006-01-02")
 		}
 	}
 	return HL{
@@ -189,7 +189,7 @@ func main() {
 			crypto.ATHMarketValue = hl.Max
 			crypto.ATLMarketDate = hl.MinDate
 			crypto.ATHMarketDate = hl.MaxDate
-			crypto.ChangeMarketCap = (crypto.ATHMarketValue - crypto.ATLMarketValue)/crypto.ATLMarketValue * 100
+			crypto.ChangeMarketCap = (crypto.ATHMarketValue - crypto.ATLMarketValue) / crypto.ATLMarketValue * 100
 		}
 
 		coin, _ := cg.CoinsID(i.ID, false, false, true, false, false, true)
@@ -210,9 +210,9 @@ func main() {
 		}
 		results = append(results, crypto)
 	}
-	f, err := os.Create("crypto5.csv")
+	f, err := os.Create("crypto7.csv")
 	if os.IsExist(err) {
-		f, _ = os.Open("crypto5.csv")
+		f, _ = os.Open("crypto7.csv")
 	}
 	w := csv.NewWriter(f)
 	w.Write(headers)
